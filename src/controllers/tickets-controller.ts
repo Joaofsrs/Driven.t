@@ -18,8 +18,18 @@ export async function getTicket(req: AuthenticatedRequest, res: Response) {
     const userId: number = req.userId as number;
     try{
         const result: CompletTicket = await ticketService.getTicket(userId);
-        res.send(result).status(httpStatus.OK);
+        res.status(httpStatus.OK).send(result);
     } catch (err) { 
+        if (err.name === 'UserDontHaveEnrollment') {
+          return res.status(httpStatus.NOT_FOUND).send({
+            message: err.message,
+          });
+        }
+        if (err.name === 'UserDontHaveTicket') {
+          return res.status(httpStatus.NOT_FOUND).send({
+            message: err.message,
+          });
+        }
         res.sendStatus(httpStatus.UNAUTHORIZED)
     }
 }
@@ -29,8 +39,18 @@ export async function createNewTicket(req: AuthenticatedRequest, res: Response){
     const userId: number = req.userId as number;
     try{
         const result: CompletTicket = await ticketService.createNewTicket(ticketTypeId, userId);
-        res.send(result).status(httpStatus.CREATED);
+        res.status(httpStatus.CREATED).send(result);
     } catch (err) { 
+        if (err.name === 'UserDontHaveEnrollment') {
+          return res.status(httpStatus.NOT_FOUND).send({
+            message: err.message,
+          });
+        }
+        if (err.name === 'TicketTypeUnexisting') {
+          return res.status(httpStatus.NOT_FOUND).send({
+            message: err.message,
+          });
+        }
         res.sendStatus(httpStatus.UNAUTHORIZED)
     }
 } 

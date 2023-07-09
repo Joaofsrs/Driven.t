@@ -17,8 +17,7 @@ async function createPaymentsProcess(body: PaymentsProcess, userId: number, tick
 
     const dia = Date.now();
     const hoje = new Date(dia).toISOString();
-    const lastDigits: string = body.cardData.number.toString(4)
-    console.log(lastDigits);
+    const lastDigits: string = body.cardData.number.toString().substr(-4)
     await prisma.payment.create({
         data:{
             ticketId: body.ticketId,

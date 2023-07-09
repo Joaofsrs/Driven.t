@@ -35,6 +35,13 @@ async function ticketByEnrollmentId(enrollmentId: number) {
     return ticket;
 }
 
+async function getTicketByUserId(userId: number) {
+    const enrollmentData: Enrollment = await getEnrollmentByUserId(userId);
+    const ticket: Ticket[] = await ticketByEnrollmentId(enrollmentData.id);
+    
+    return ticket;
+}
+
 async function getTicket(userId: number) {
     const enrollmentData: Enrollment = await getEnrollmentByUserId(userId);
     const ticket: Ticket[] = await ticketByEnrollmentId(enrollmentData.id);
@@ -127,6 +134,7 @@ async function updateTicketPayment(ticketId: number) {
 
 const ticketRepository = {
     getTicketsTypes,
+    getTicketByUserId,
     ticketTypeByTicketTypeId,
     getTicket,
     getTicketByTicketId,

@@ -38,6 +38,12 @@ export function handleApplicationErrors(
     });
   }
 
+  if (err.name === 'UserDontHaveEnrollment') {
+    return res.status(httpStatus.NOT_FOUND).send({
+      message: err.message,
+    });
+  }
+
   if (err.name === 'UserDontHaveTicket') {
     return res.status(httpStatus.NOT_FOUND).send({
       message: err.message,

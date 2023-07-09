@@ -34,7 +34,7 @@ async function createPaymentsProcess(body: PaymentsProcess, userId: number){
     }
     const enrollmentData: Enrollment = await enrollmentRepository.getEnrollmentById(ticketExist.enrollmentId);
     if(enrollmentData.userId !== userId){
-        throw ticketDontExist(); //401
+        throw ticketDontBelong(); //401
     }
 
     const result = await paymentsRepository.createPaymentsProcess(body, userId, ticketExist.ticketTypeId);

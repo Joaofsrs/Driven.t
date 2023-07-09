@@ -13,3 +13,11 @@ export function userDontHaveTicket(): ApplicationError {
     message: 'Thist user dont have a ticket',
   };
 }
+
+export function userDontHaveEnrollment(): ApplicationError {
+  return {
+    name: 'UserDontHaveEnrollment',
+    message: 'Thist user dont have a enrollment',
+  };
+}
+
