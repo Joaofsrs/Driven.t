@@ -6,3 +6,10 @@ export function ticketTypeUnexisting(): ApplicationError {
     message: 'Thist ticket type does not exist',
   };
 }
+
+export function userDontHaveTicket(): ApplicationError {
+  return {
+    name: 'UserDontHaveTicket',
+    message: 'Thist user dont have a ticket',
+  };
+}

@@ -1,7 +1,7 @@
 import { CompletTicket, TicketTypeId } from "@/protocols";
 import ticketRepository from "@/repositories/ticket-repository";
 import { TicketType } from "@prisma/client";
-import { ticketTypeUnexisting } from "./errors";
+import { ticketTypeUnexisting, userDontHaveTicket } from "./errors";
 
 async function getTicketsTypes(){
     const result: TicketType[] = await ticketRepository.getTicketsTypes();
@@ -11,14 +11,15 @@ async function getTicketsTypes(){
 
 async function getTicket(userId: number) {
     const result: CompletTicket = await ticketRepository.getTicket(userId);
-
+    if(!result){
+        throw userDontHaveTicket();
+    }
     return result;
 }
 
 async function createNewTicket(ticketTypeId: TicketTypeId, userId: number){
     const ticketTypeExist = await ticketRepository.ticketTypeByTicketTypeId(ticketTypeId.ticketTypeId)
     if(!ticketTypeExist){
-        console.log(ticketTypeExist)
         throw ticketTypeUnexisting();
     }
     

@@ -6,8 +6,8 @@ import { Router } from "express";
 const ticketsRouter = Router();
 
 ticketsRouter
-    .get('/types', getTicketsTypes)
     .all('/*', authenticateToken)
+    .get('/types', getTicketsTypes)
     .post('/', validateBody(createTicketsSchema), createNewTicket)
     .get('/', getTicket)
 

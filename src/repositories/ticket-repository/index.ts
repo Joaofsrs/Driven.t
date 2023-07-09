@@ -1,6 +1,6 @@
 import { prisma } from '@/config';
 import { CompletTicket, TicketTypeId } from '@/protocols';
-import { Enrollment, Prisma, TicketType, Ticket } from '@prisma/client';
+import { Enrollment, TicketType, Ticket } from '@prisma/client';
 
 async function getTicketsTypes(){
     const result: TicketType[]= await prisma.ticketType.findMany();
@@ -100,11 +100,38 @@ async function createNewTicket(ticketTypeId: TicketTypeId, userId: number) {
     return finalTicket;
 }
 
+async function  getTicketByTicketId(ticketId: number) {
+    const ticket = await prisma.ticket.findUnique({
+        where: {
+            id: ticketId
+        }
+    })
+
+    return ticket;
+}
+
+async function updateTicketPayment(ticketId: number) {
+    const dia = Date.now();
+    const hoje = new Date(dia).toISOString();
+
+    const ticket = await prisma.ticket.update({
+        where: {
+            id: ticketId
+        },
+        data: {
+            status: 'PAID',
+            updatedAt: hoje
+        }
+    })
+}
+
 const ticketRepository = {
     getTicketsTypes,
     ticketTypeByTicketTypeId,
     getTicket,
-    createNewTicket
+    getTicketByTicketId,
+    createNewTicket,
+    updateTicketPayment
 };
 
 export default ticketRepository;
