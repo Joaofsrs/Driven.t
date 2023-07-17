@@ -2,6 +2,7 @@ import { Enrollment } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function findWithAddressByUserId(userId: number) {
+  console.log(userId);
   return prisma.enrollment.findFirst({
     where: { userId },
     include: {

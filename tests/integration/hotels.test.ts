@@ -8,15 +8,12 @@ import {
     createUser,
     createTicketType,
     createTicket,
-    generateCreditCardData,
     createHotel,
     createRoom,
     createPayment
 } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
-import { prisma } from '@/config';
 import app, { init } from '@/app';
-import { number } from 'joi';
 
 
 beforeAll(async () => {

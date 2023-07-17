@@ -8,6 +8,11 @@ async function main() {
   let hotel = await prisma.hotel.findFirst();
   let room = await prisma.room.findFirst();
   let user = await prisma.user.findFirst();
+  let enrollment = await prisma.enrollment.findFirst();
+  let address = await prisma.address.findFirst();
+  let ticketType = await prisma.ticketType.findFirst();
+  let ticket = await prisma.ticket.findFirst();
+  let payment = await prisma.payment.findFirst();
   let booking = await prisma.booking.findFirst();
 
   if (!event) {
@@ -22,7 +27,6 @@ async function main() {
     });
   }
 
-  /*
   if (!hotel) {
     hotel = await prisma.hotel.create({
       data: {
@@ -55,6 +59,65 @@ async function main() {
     });
   }
 
+  if (!enrollment) {
+    enrollment = await prisma.enrollment.create({
+      data: {
+        name: "joao",
+        cpf: "06459861198",
+        birthday: dayjs().toDate(),
+        phone: "61 9 81617008",
+        userId: user.id
+      },
+    });
+  }
+
+  if (!address) {
+    address = await prisma.address.create({
+      data: {
+        cep: "71725053",
+        street: 'Avenida Brigadeiro Faria Lima',
+        city: 'São Paulo',
+        state:  'Itaim Bibi',
+        number: "10",
+        neighborhood:  'Itaim Bibi',
+        addressDetail:  'de 3252 ao fim - lado par',
+        enrollmentId: enrollment.id
+      },
+    });
+  }
+
+  if (!ticketType) {
+    ticketType = await prisma.ticketType.create({
+      data: {
+        name: "ingresso",
+        price: 13,
+        isRemote: false,
+        includesHotel: true
+      },
+    });
+  }
+
+  if (!ticket) {
+    ticket = await prisma.ticket.create({
+      data: {
+        ticketTypeId: ticketType.id,
+        enrollmentId: enrollment.id,
+        status: "PAID"
+      },
+    });
+  }
+
+  if (!payment) {
+    payment = await prisma.payment.create({
+      data: {
+        ticketId: ticket.id,
+        value: 13,
+        cardIssuer: "Visa",
+        cardLastDigits: "2323"
+      },
+    });
+  }
+
   if (!booking) {
     booking = await prisma.booking.create({
       data: {
@@ -64,9 +127,9 @@ async function main() {
       },
     });
   }
+  
+  console.log({ event, hotel, room, user, enrollment, address, ticketType, ticket, payment, booking });
 
-  console.log({ event, hotel, room, user, booking });
-  */
 }
 
 main()
