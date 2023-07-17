@@ -22,6 +22,7 @@ async function main() {
     });
   }
 
+  /*
   if (!hotel) {
     hotel = await prisma.hotel.create({
       data: {
@@ -65,6 +66,7 @@ async function main() {
   }
 
   console.log({ event, hotel, room, user, booking });
+  */
 }
 
 main()

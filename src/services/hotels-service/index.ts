@@ -9,26 +9,21 @@ import paymentsRepository from "@/repositories/payments-repository";
 async function validateHotels(userId: number){
     const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
     if(!enrollment) {
-        console.log("enrollment")
         throw notFoundError();
     }
     const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id)
     if(!ticket) {
-        console.log("ticket")
         throw notFoundError();
     }
     const hotels = await hotelsRepository.getHotelsList();
     if(hotels.length <= 0) {
-        console.log("hotels")
         throw notFoundError();
     }
-    if(ticket.TicketType.isRemote || ticket.TicketType.includesHotel){
-        console.log("ticket remote hotel")
+    if(ticket.TicketType.isRemote || !(ticket.TicketType.includesHotel)){
         throw paymentRequired();
     }
     const payment = await paymentsRepository.findPaymentByTicketId(ticket.id);
     if(!payment){
-        console.log("payment")
         throw paymentRequired();
     }    
 }
