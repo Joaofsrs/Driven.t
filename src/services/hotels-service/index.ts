@@ -15,10 +15,6 @@ async function validateHotels(userId: number){
     if(!ticket) {
         throw notFoundError();
     }
-    const hotels = await hotelsRepository.getHotelsList();
-    if(hotels.length <= 0) {
-        throw notFoundError();
-    }
     if(ticket.TicketType.isRemote || !(ticket.TicketType.includesHotel)){
         throw paymentRequired();
     }
@@ -26,6 +22,10 @@ async function validateHotels(userId: number){
     if(!payment){
         throw paymentRequired();
     }    
+    const hotels = await hotelsRepository.getHotelsList();
+    if(hotels.length <= 0) {
+        throw notFoundError();
+    }
 }
 
 async function getHotelsList(userId: number): Promise<Hotel[]>{

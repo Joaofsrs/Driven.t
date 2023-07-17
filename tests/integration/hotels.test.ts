@@ -77,8 +77,9 @@ describe('GET /hotels/', () => {
             const user = await createUser();
             const token = await generateValidToken(user);
             const enrollment = await createEnrollmentWithAddress(user);
-            const ticketType = await createTicketType();
-            await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+            const ticketType = await createTicketType({ isRemote: false, includesHotel: true });
+            const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+            await createPayment(ticket.id, 15);
 
             const response = await server.get('/hotels/').set('Authorization', `Bearer ${token}`);
 
@@ -209,8 +210,9 @@ describe('GET /hotels/:hotelId', () => {
             const user = await createUser();
             const token = await generateValidToken(user);
             const enrollment = await createEnrollmentWithAddress(user);
-            const ticketType = await createTicketType();
-            await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+            const ticketType = await createTicketType({ isRemote: false, includesHotel: true });
+            const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+            await createPayment(ticket.id, 15);
 
             const response = await server.get(`/hotels/4`).set('Authorization', `Bearer ${token}`);
 
