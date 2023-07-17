@@ -18,7 +18,7 @@ async function validateHotels(userId: number){
         throw notFoundError();
     }
     const hotels = await hotelsRepository.getHotelsList();
-    if(!hotels) {
+    if(hotels.length <= 0) {
         console.log("hotels")
         throw notFoundError();
     }
@@ -46,7 +46,7 @@ async function getHotelsRoomList(hotelId: number, userId: number): Promise<Hotel
         throw notFoundError()
     }
     const rooms = await hotelsRepository.getHotelsRoomList(hotelId);
-    
+
     return rooms;
 }
 

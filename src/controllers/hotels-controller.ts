@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 
 export async function getHotelsList(req: AuthenticatedRequest, res: Response) {
-  const { userId } = req;
+  const userId = req.userId as number;
   try {
     const hotels = await hotelsService.getHotelsList(userId);
     return res.status(httpStatus.OK).send(hotels);
@@ -20,8 +20,8 @@ export async function getHotelsList(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function getHotelsRoomList(req: AuthenticatedRequest, res: Response) {
-  const { userId } = req;
-  const hotelId = Number(req.params.hotelId) as number; 
+  const userId = req.userId as number;
+  const hotelId = parseInt(req.params.hotelId) as number; 
   try {
     const hotels = await hotelsService.getHotelsRoomList(hotelId, userId);
     return res.status(httpStatus.OK).send(hotels);
