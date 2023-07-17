@@ -1,4 +1,4 @@
-import { boolean, date, number } from "joi";
+import { Payment, Ticket } from '@prisma/client';
 
 export type ApplicationError = {
   name: string;
@@ -47,35 +47,18 @@ export type RequestError = {
   message: string;
 };
 
-export type TicketTypeId = {
-  ticketTypeId: number
-}
+export type CreateTicketParams = Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>;
 
-export type CompletTicket = {
-  id: number,
-  status: string,
-  ticketTypeId: number,
-  enrollmentId: number,
-  TicketType: {
-    id: number,
-    name: string,
-    price: number,
-    isRemote: boolean,
-    includesHotel: boolean,
-    createdAt: Date,
-    updatedAt: Date,
-  },
-  createdAt: Date,
-  updatedAt: Date,
-}
+export type CardPaymentParams = {
+  issuer: string;
+  number: number;
+  name: string;
+  expirationDate: Date;
+  cvv: number;
+};
 
-export type PaymentsProcess = {
-	ticketId: number,
-	cardData: {
-		issuer: string,
-    number: number,
-    name: string,
-    expirationDate: Date,
-    cvv: number
-	}
-}
+export type PaymentParams = Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>;
+
+export type InputTicketBody = {
+  ticketTypeId: number;
+};

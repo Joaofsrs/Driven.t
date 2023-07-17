@@ -1,41 +1,21 @@
-import { PaymentsProcess } from "@/protocols";
 import { prisma } from '@/config';
-import ticketRepository from "../ticket-repository";
-import { Payment } from "@prisma/client";
+import { PaymentParams } from '@/protocols';
 
-async function getPaymentsByTicketId(ticketId: number) {
-    const result: Payment[] = await prisma.payment.findMany({
-        where:{
-            ticketId
-        }
-    });
-    return result[0];
+async function findPaymentByTicketId(ticketId: number) {
+  return prisma.payment.findFirst({
+    where: {
+      ticketId,
+    },
+  });
 }
 
-async function createPaymentsProcess(body: PaymentsProcess, userId: number, ticketTypeId: number){
-    const ticketType = await ticketRepository.ticketTypeByTicketTypeId(ticketTypeId);
-
-    const dia = Date.now();
-    const hoje = new Date(dia).toISOString();
-    const lastDigits: string = body.cardData.number.toString().substr(-4)
-    await prisma.payment.create({
-        data:{
-            ticketId: body.ticketId,
-            value: ticketType.price,
-            cardIssuer: body.cardData.issuer,
-            cardLastDigits: lastDigits,
-            updatedAt: hoje 
-        }
-    })
-    const result: Payment = await getPaymentsByTicketId(body.ticketId);
-
-    return result;
+async function createPayment(ticketId: number, params: PaymentParams) {
+  return prisma.payment.create({
+    data: {
+      ticketId,
+      ...params,
+    },
+  });
 }
 
-
-const paymentsRepository = {
-    createPaymentsProcess,
-    getPaymentsByTicketId
-};
-
-export default paymentsRepository;
+export default { findPaymentByTicketId, createPayment };

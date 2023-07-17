@@ -1,56 +1,41 @@
-import { AuthenticatedRequest } from "@/middlewares";
-import { CompletTicket, TicketTypeId } from "@/protocols";
-import ticketService from "@/services/ticket-service";
-import { TicketType } from "@prisma/client";
-import { Request, Response } from "express";
-import httpStatus from "http-status";
+import { Response } from 'express';
+import httpStatus from 'http-status';
+import { AuthenticatedRequest } from '@/middlewares';
+import ticketService from '@/services/tickets-service';
+import { InputTicketBody } from '@/protocols';
 
-export async function getTicketsTypes(req: AuthenticatedRequest, res: Response) {
-    try{
-        const result: TicketType[] = await ticketService.getTicketsTypes();
-        res.send(result).status(httpStatus.OK)
-    } catch (err) { 
-        res.sendStatus(httpStatus.UNAUTHORIZED)
-    }
+export async function getTicketTypes(req: AuthenticatedRequest, res: Response) {
+  try {
+    const ticketTypes = await ticketService.getTicketType();
+    return res.status(httpStatus.OK).send(ticketTypes);
+  } catch (e) {
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  }
 }
 
-export async function getTicket(req: AuthenticatedRequest, res: Response) {
-    const userId: number = req.userId as number;
-    try{
-        const result: CompletTicket = await ticketService.getTicket(userId);
-        res.status(httpStatus.OK).send(result);
-    } catch (err) { 
-        if (err.name === 'UserDontHaveEnrollment') {
-          return res.status(httpStatus.NOT_FOUND).send({
-            message: err.message,
-          });
-        }
-        if (err.name === 'UserDontHaveTicket') {
-          return res.status(httpStatus.NOT_FOUND).send({
-            message: err.message,
-          });
-        }
-        res.sendStatus(httpStatus.UNAUTHORIZED)
-    }
+export async function getTickets(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+
+  try {
+    const ticket = await ticketService.getTicketByUserId(userId);
+    return res.status(httpStatus.OK).send(ticket);
+  } catch (e) {
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
 }
 
-export async function createNewTicket(req: AuthenticatedRequest, res: Response){
-    const ticketTypeId = req.body as TicketTypeId;
-    const userId: number = req.userId as number;
-    try{
-        const result: CompletTicket = await ticketService.createNewTicket(ticketTypeId, userId);
-        res.status(httpStatus.CREATED).send(result);
-    } catch (err) { 
-        if (err.name === 'UserDontHaveEnrollment') {
-          return res.status(httpStatus.NOT_FOUND).send({
-            message: err.message,
-          });
-        }
-        if (err.name === 'TicketTypeUnexisting') {
-          return res.status(httpStatus.NOT_FOUND).send({
-            message: err.message,
-          });
-        }
-        res.sendStatus(httpStatus.UNAUTHORIZED)
-    }
-} 
+export async function createTicket(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const { ticketTypeId } = req.body as InputTicketBody;
+
+  if (!ticketTypeId) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+
+  try {
+    const ticket = await ticketService.createTicket(userId, ticketTypeId);
+    return res.status(httpStatus.CREATED).send(ticket);
+  } catch (e) {
+    return res.sendStatus(httpStatus.NOT_FOUND);
+  }
+}
