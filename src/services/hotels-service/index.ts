@@ -40,6 +40,10 @@ async function getHotelsRoomList(hotelId: number, userId: number): Promise<Hotel
     if(Number.isNaN(hotelId)){
         throw notFoundError()
     }
+    const hotel = await hotelsRepository.getHotelById(hotelId);
+    if(!hotel){
+        throw notFoundError()
+    }
     const rooms = await hotelsRepository.getHotelsRoomList(hotelId);
 
     return rooms;
