@@ -17,10 +17,6 @@ async function getBooking(userId: number) {
     };
 }
 
-async function testIfRoomPass(userId: number, roomId: number){
-    
-}
-
 async function postBooking(userId: number, roomId: number){
     const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
     if(!enrollment){

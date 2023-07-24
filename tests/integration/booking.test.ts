@@ -162,7 +162,7 @@ describe('POST /booking', () => {
     
             expect(response.status).toEqual(httpStatus.OK);
             expect(response.body).toEqual({
-                id: expect.any(Number)
+                bookingId: expect.any(Number)
             })
         });
     });
@@ -296,7 +296,7 @@ describe('PUT /booking', () => {
     
             expect(response.status).toEqual(httpStatus.OK);
             expect(response.body).toEqual({
-                id: expect.any(Number)
+                bookingId: expect.any(Number)
             })
         });
     });

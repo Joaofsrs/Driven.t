@@ -21,7 +21,7 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
     const userId = req.userId as number;
     try{    
         const response = await bookingService.postBooking(userId, roomId);
-        return res.status(200).send({ id: response.id });
+        return res.status(200).send({ bookingId: response.id });
     } catch (error) {
         if(error.name === 'InvalidRoomId'){
             return res.sendStatus(httpStatus.NOT_FOUND);
@@ -38,7 +38,7 @@ export async function putBookingByRoomId(req: AuthenticatedRequest, res: Respons
     const userId = req.userId as number;
     try{
         const response = await bookingService.putBookingByRoomId(userId, roomId, bookingId);
-        return res.status(200).send({ id: response.id });
+        return res.status(200).send({ bookingId: response.id });
     } catch (error) {
         if(error.name === 'InvalidRoomId'){
             return res.sendStatus(httpStatus.NOT_FOUND);
