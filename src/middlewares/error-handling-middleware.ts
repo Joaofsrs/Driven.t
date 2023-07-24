@@ -37,11 +37,6 @@ export function handleApplicationErrors(
       message: err.message,
     });
   }
-  if (err.name === 'PaymentFail') {
-    return res.status(httpStatus.PAYMENT_REQUIRED).send({
-      message: err.message,
-    });
-  }
 
   /* eslint-disable-next-line no-console */
   console.error(err.name);

@@ -13,7 +13,7 @@ async function main() {
   let ticketType = await prisma.ticketType.findFirst();
   let ticket = await prisma.ticket.findFirst();
   let payment = await prisma.payment.findFirst();
-  let booking = await prisma.booking.findFirst();
+  //let booking = await prisma.booking.findFirst();
 
   if (!event) {
     event = await prisma.event.create({
@@ -37,7 +37,7 @@ async function main() {
     });
   }
 
-  if (!room) {
+  if (room) {
     room = await prisma.room.create({
       data: {
         name: "Driven.t room",
@@ -117,7 +117,7 @@ async function main() {
       },
     });
   }
-
+  /*
   if (!booking) {
     booking = await prisma.booking.create({
       data: {
@@ -127,8 +127,8 @@ async function main() {
       },
     });
   }
-  
-  console.log({ event, hotel, room, user, enrollment, address, ticketType, ticket, payment, booking });
+  */
+  console.log({ event, hotel, room, user, enrollment, address, ticketType, ticket, payment });
 
 }
 
