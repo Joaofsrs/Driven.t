@@ -2,6 +2,7 @@ import bookingRepository from "@/repositories/booking-repository";
 import { fullRoom, invalidBooking, invalidBookingId, invalidRoomId, ruleRoom } from "./errors";
 import enrollmentRepository from "@/repositories/enrollment-repository";
 import ticketsRepository from "@/repositories/tickets-repository";
+import { TicketStatus } from "@prisma/client";
 
 async function getBooking(userId: number) {
     const booking = await bookingRepository.fingBookingByUserId(userId);
@@ -34,7 +35,9 @@ async function postBooking(userId: number, roomId: number){
     if(ticket.TicketType.isRemote || !ticket.TicketType.includesHotel){
         throw ruleRoom();
     }
-
+    if(ticket.status === TicketStatus.RESERVED){
+        throw ruleRoom();
+    }
     if(isNaN(roomId)){
         throw invalidRoomId();
     }
@@ -56,7 +59,7 @@ async function putBookingByRoomId(userId: number, roomId: number, bookingId: num
     if(isNaN(bookingId)){
         throw invalidBookingId();
     }
-    const bookingExist = await bookingRepository.fingBookingByUserId(userId);
+    const bookingExist = await bookingRepository.fingBookingById(bookingId);
     if(!bookingExist){
         throw invalidBookingId();
     }

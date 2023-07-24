@@ -13,7 +13,6 @@ export async function getBooking(req: AuthenticatedRequest, res: Response) {
         if(error.name === 'InvalidBooking'){
             return res.sendStatus(httpStatus.NOT_FOUND);
         }
-        return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
 }
 
@@ -22,7 +21,7 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
     const userId = req.userId as number;
     try{    
         const response = await bookingService.postBooking(userId, roomId);
-        return res.status(200).send(response.id);
+        return res.status(200).send({ id: response.id });
     } catch (error) {
         if(error.name === 'InvalidRoomId'){
             return res.sendStatus(httpStatus.NOT_FOUND);
@@ -30,7 +29,6 @@ export async function postBooking(req: AuthenticatedRequest, res: Response) {
         if(error.name === 'FullRoom' || error.name === 'RuleRoom'){
             return res.sendStatus(httpStatus.FORBIDDEN);
         }
-        return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
 }
 
@@ -40,7 +38,7 @@ export async function putBookingByRoomId(req: AuthenticatedRequest, res: Respons
     const userId = req.userId as number;
     try{
         const response = await bookingService.putBookingByRoomId(userId, roomId, bookingId);
-        return res.status(200).send(response.id);
+        return res.status(200).send({ id: response.id });
     } catch (error) {
         if(error.name === 'InvalidRoomId'){
             return res.sendStatus(httpStatus.NOT_FOUND);
@@ -48,6 +46,5 @@ export async function putBookingByRoomId(req: AuthenticatedRequest, res: Respons
         if(error.name === 'FullRoom' || error.name === 'RuleRoom' || error.name === 'InvalidBookingId'){
             return res.sendStatus(httpStatus.FORBIDDEN);
         }
-        return res.sendStatus(httpStatus.UNAUTHORIZED);
     }
 }
